@@ -4,7 +4,16 @@ class ListingsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    @listings = Listing.paginate(:page => params[:page], :per_page => 50)
+    @listings = Listing.all
+
+    if params[:start_date] and params[:end_date]
+      @start_date = DateTime(params[:start_date], "%y-%m-%d")
+      @end_date = DateTime(params[:end_date], "%y-%m-%d")
+
+      @listings = @listings.date_range(@start_date, @end_date)
+    end
+
+    @listings = @listings.paginate(:page => params[:page], :per_page => 50)
     respond_to do |format|
       format.html
       format.json {render json: @listings.to_json}
