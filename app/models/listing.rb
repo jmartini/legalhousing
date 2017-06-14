@@ -32,4 +32,8 @@ class Listing < ApplicationRecord
 	def self.num_discriminatory
 		Listing.discriminatory.count
 	end
+
+  def self.date_range(date_from, date_to)
+    Listing.where(:created_at => date_from..date_to)
+  end
 end
